@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>PackFound</title>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav>
+        <button onclick="changeLanguage('fa')">پارسی🦁</button>
+        <button onclick="changeLanguage('en')">English🇺🇸</button>
+    </nav>
+
+    <section class="store">
+        <div data-aos="fade-up" class="pack-card">
+            <img src="images/pack1.jpg" alt="Pack">
+            <h2 data-i18n="pack_title">نام پک</h2>
+            <button data-i18n="download">دانلود</button>
+        </div>
+    </section>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>AOS.init();</script>
+    <script src="script.js"></script>
+</body>
+</html>
