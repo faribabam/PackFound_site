@@ -1,22 +1,23 @@
-const translations = {
-    fa: {
-        pack_title: "پک ماینکرافت ویژه",
-        download: "دانلود پک"
-    },
-    en: {
-        pack_title: "Special Minecraft Pack",
-        download: "Download Pack"
+// دیتا بیس پک‌ها
+const packs = [
+    {
+        id: "pack1",
+        name: { fa: "نات انی‌مور ۳۲ایکس", en: "Not Anymore 32x" },
+        desc: { fa: "پک قرمز تیره برای افزایش اف‌پی‌اس", en: "Dark red pack for fps boost" },
+        price: "50,000 Toman"
     }
-};
+];
 
+// تابع تغییر زبان
 function changeLanguage(lang) {
-    // تغییر جهت سایت
     document.documentElement.dir = (lang === 'fa') ? 'rtl' : 'ltr';
-    document.documentElement.lang = lang;
-
-    // تغییر متون
-    document.querySelectorAll("[data-i18n]").forEach(element => {
-        const key = element.getAttribute("data-i18n");
-        element.textContent = translations[lang][key];
+    
+    // تغییر متن‌ها
+    packs.forEach(pack => {
+        const titleEl = document.getElementById(pack.id + "-title");
+        const descEl = document.getElementById(pack.id + "-desc");
+        
+        if(titleEl) titleEl.textContent = pack.name[lang];
+        if(descEl) descEl.textContent = pack.desc[lang];
     });
 }
