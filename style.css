@@ -1,0 +1,28 @@
+/* تنظیمات پایه */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    transition: all 0.3s ease;
+}
+
+/* تنظیمات برای جهت راست به چپ (فارسی) */
+html[dir="rtl"] {
+    direction: rtl;
+    text-align: right;
+}
+
+/* تنظیمات برای جهت چپ به راست (انگلیسی) */
+html[dir="ltr"] {
+    direction: ltr;
+    text-align: left;
+}
+
+/* استایل کارت‌های پک */
+.pack-card {
+    background: #2d3748;
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+    margin: 20px;
+}
