@@ -18,35 +18,54 @@
             </div>
             <div>
                 <label class="text-xs text-stone-500 mr-1">شماره همراه</label>
-                <input type="tel" id="phone" required class="w-full p-3 mt-1 rounded-xl bg-stone-50 border border-stone-200 text-sm text-center font-mono">
+                <input type="tel" id="phone" required class="w-full p-3 mt-1 rounded-xl bg-stone-50 border border-stone-200 text-sm text-center font-mono" placeholder="09xxxxxxxxx">
             </div>
-            <button type="submit" class="w-full bg-stone-900 text-white py-3 rounded-xl text-sm mt-2 hover:bg-stone-800">ورود به ویترین</button>
+            <button type="submit" id="submit-btn" class="w-full bg-stone-900 text-white py-3 rounded-xl text-sm mt-2 hover:bg-stone-800 transition-all">ورود و اطلاع به مدیریت</button>
         </form>
     </div>
 
     <script>
-        function saveUser(e) {
+        // اطلاعات شما ثبت شد
+        const BOT_TOKEN = "8940936882:AAG2OeXFfOsOwMPEuwhRHxfef9iBK68q3IU";
+        const ADMIN_CHAT_ID = "6850239276";
+
+        async function saveUser(e) {
             e.preventDefault();
-            const userData = {
-                name: document.getElementById('name').value,
-                phone: document.getElementById('phone').value
-            };
-            
-            // ذخیره نام و شماره در حافظه
-            localStorage.setItem('sama_user', JSON.stringify(userData));
-            
-            alert("خوش آمدید " + userData.name + " عزیز!");
-            window.location.reload();
+            const btn = document.getElementById('submit-btn');
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+
+            btn.innerText = "در حال ارسال...";
+            btn.disabled = true;
+
+            const msg = `🔔 مشتری جدید وارد سایت شد:
+👤 نام: ${name}
+📱 شماره: ${phone}
+🆔 لطفا جهت احراز هویت با او تماس بگیرید.`;
+
+            // ارسال پیام به تلگرام شما
+            try {
+                const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${ADMIN_CHAT_ID}&text=${encodeURIComponent(msg)}`;
+                const img = new Image();
+                img.src = url;
+
+                localStorage.setItem('sama_user', JSON.stringify({ name, phone }));
+                
+                alert("خوش آمدید! درخواست شما برای مدیریت ارسال شد.");
+                window.location.reload();
+            } catch (err) {
+                alert("خطایی رخ داد. لطفا دوباره تلاش کنید.");
+                btn.disabled = false;
+                btn.innerText = "ورود و اطلاع به مدیریت";
+            }
         }
 
-        // بررسی اینکه آیا کاربر قبلاً وارد شده یا نه
         if (localStorage.getItem('sama_user')) {
             const user = JSON.parse(localStorage.getItem('sama_user'));
             document.body.innerHTML = `
-                <div class="text-center p-8">
-                    <h2 class="text-2xl font-bold">سلام ${user.name} عزیز!</h2>
-                    <p class="text-stone-600 mt-2">به ویترین طلا و جواهرات سما زرین خوش آمدید.</p>
-                    <button onclick="localStorage.removeItem('sama_user'); location.reload();" class="mt-6 text-xs text-red-500 underline">خروج از حساب</button>
+                <div class="text-center p-8 bg-white rounded-3xl shadow-sm border border-stone-100 max-w-sm w-full">
+                    <h2 class="text-xl font-bold">سلام ${user.name} عزیز!</h2>
+                    <p class="text-stone-600 mt-2 text-sm">درخواست احراز هویت شما به مدیریت ارسال شد. منتظر تایید باشید.</p>
                 </div>
             `;
         }
