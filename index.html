@@ -6,195 +6,71 @@
     <title>گالری طلا و جواهر سما زرین | SAMA ZARRIN</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        body { 
-            background-color: #f4f4f6; 
-            color: #212529; 
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-        }
+        body { background-color: #f4f4f6; color: #212529; font-family: system-ui, sans-serif; }
     </style>
 </head>
-<body class="p-4 md:p-8 flex items-center justify-center min-h-screen" id="body-layout">
+<body class="p-4 md:p-8 flex items-center justify-center min-h-screen">
 
-    <!-- 🔐 بخش فرم‌های ورود و ثبت‌نام -->
     <div id="auth-section" class="w-full max-w-md mx-auto bg-white p-8 rounded-3xl shadow-md border border-stone-100">
         
         <div id="auth-tabs" class="flex justify-center gap-6 mb-8 border-b pb-3 border-stone-100">
-            <button onclick="switchTab('login')" id="tab-login" class="text-sm font-semibold text-stone-900 border-b-2 border-stone-900 pb-2 px-2 cursor-pointer">ورود مشتری</button>
-            <button onclick="switchTab('signup')" id="tab-signup" class="text-sm font-medium text-stone-400 pb-2 px-2 cursor-pointer">ثبت‌نام مشتری جدید</button>
+            <button onclick="switchTab('login')" id="tab-login" class="text-sm font-semibold text-stone-900 border-b-2 border-stone-900 pb-2 px-2 cursor-pointer">ورود</button>
+            <button onclick="switchTab('signup')" id="tab-signup" class="text-sm font-medium text-stone-400 pb-2 px-2 cursor-pointer">ثبت‌نام</button>
         </div>
 
-        <!-- فرم ورود -->
-        <form id="login-form" class="space-y-5" onsubmit="handleLogin(event)">
-            <div class="text-center mb-4">
-                <h1 class="text-2xl font-light tracking-widest text-stone-800 uppercase">SAMA ZARRIN</h1>
-                <p class="text-xs text-stone-400 mt-1">ورود به گالری دیجیتال سما زرین</p>
-            </div>
-            <div>
-                <label class="block text-xs font-medium text-stone-500 mb-1.5 mr-1">شماره تلفن همراه</label>
-                <input type="tel" id="user-phone" class="w-full bg-stone-50 p-3.5 rounded-xl text-stone-800 border border-stone-200 text-sm text-center font-mono" placeholder="09XXXXXXXXX" required>
-            </div>
-            <div>
-                <label class="block text-xs font-medium text-stone-500 mb-1.5 mr-1">رمز عبور</label>
-                <input type="password" id="user-password" class="w-full bg-stone-50 p-3.5 rounded-xl text-stone-800 border border-stone-200 text-sm text-center font-mono" placeholder="••••••••" required>
-            </div>
-            <button type="submit" class="w-full bg-stone-900 text-white font-medium py-3.5 rounded-xl hover:bg-stone-800 text-sm shadow-sm">ورود به گالری</button>
-        </form>
-
-        <!-- فرم ثبت‌نام -->
         <form id="signup-form" class="space-y-5 hidden" onsubmit="handleSignUpStep1(event)">
-            <div class="text-center mb-4">
-                <h1 class="text-2xl font-light tracking-widest text-stone-800 uppercase">SAMA ZARRIN</h1>
-                <p class="text-xs text-stone-400 mt-1">ایجاد حساب کاربری مشتری</p>
-            </div>
-            <div>
-                <label class="block text-xs font-medium text-stone-500 mb-1.5 mr-1">نام و نام‌خانوادگی</label>
-                <input type="text" id="new-name" class="w-full bg-stone-50 p-3.5 rounded-xl text-stone-800 border border-stone-200 text-sm px-4" placeholder="مثال: رضا احمدی" required>
-            </div>
-            <div>
-                <label class="block text-xs font-medium text-stone-500 mb-1.5 mr-1">شماره تلفن همراه</label>
-                <input type="tel" id="new-phone" class="w-full bg-stone-50 p-3.5 rounded-xl text-stone-800 border border-stone-200 text-sm text-center font-mono" placeholder="09XXXXXXXXX" required>
-            </div>
-            <div>
-                <label class="block text-xs font-medium text-stone-500 mb-1.5 mr-1">تعیین رمز عبور</label>
-                <input type="password" id="new-password" class="w-full bg-stone-50 p-3.5 rounded-xl text-stone-800 border border-stone-200 text-sm text-center font-mono" placeholder="••••••••" required>
-            </div>
-            <button type="submit" class="w-full bg-stone-900 text-white font-medium py-3.5 rounded-xl hover:bg-stone-800 text-sm shadow-sm">تایید شماره و دریافت کد</button>
+            <h1 class="text-center text-2xl font-light tracking-widest text-stone-800">SAMA ZARRIN</h1>
+            <input type="text" id="new-name" class="w-full bg-stone-50 p-3 rounded-xl border border-stone-200 text-sm" placeholder="نام و نام‌خانوادگی" required>
+            <input type="tel" id="new-phone" class="w-full bg-stone-50 p-3 rounded-xl border border-stone-200 text-sm text-center font-mono" placeholder="شماره موبایل: 09..." required>
+            <input type="password" id="new-password" class="w-full bg-stone-50 p-3 rounded-xl border border-stone-200 text-sm text-center font-mono" placeholder="رمز عبور" required>
+            <button type="submit" class="w-full bg-stone-900 text-white py-3 rounded-xl text-sm">تایید و ساخت کد</button>
         </form>
 
-        <!-- فرم بررسی کد تایید -->
         <form id="otp-form" class="space-y-5 hidden" onsubmit="handleVerifyOTP(event)">
-            <div class="text-center mb-4">
-                <h1 class="text-2xl font-light tracking-widest text-stone-800 uppercase">SAMA ZARRIN</h1>
-                <p class="text-xs text-stone-400 mt-1">تایید شماره تلفن همراه</p>
-                <div class="my-4 bg-amber-50 border border-amber-200 rounded-xl p-3 text-right">
-                    <p class="text-xs text-amber-800 font-medium mb-2">برای دریافت کد تایید نهایی:</p>
-                    <!-- ✅ لینک مستقیم به ربات اختصاصی شما -->
-                    <a href="https://t.me/Samazarinn_bot?start=getcode" target="_blank" class="inline-flex items-center justify-center w-full bg-sky-600 text-white text-xs font-semibold py-2.5 rounded-lg shadow-sm hover:bg-sky-700 transition-colors">
-                        💬 ورود به ربات تلگرام سما زرین
-                    </a>
-                </div>
-            </div>
-            <div>
-                <label class="block text-xs font-medium text-stone-500 mb-1.5 mr-1 text-center">کد ۴ رقمی دریافتی از ربات</label>
-                <input type="text" id="otp-input" maxlength="4" class="w-full bg-stone-50 p-3.5 rounded-xl text-stone-800 border border-stone-200 text-lg text-center font-mono tracking-[0.5em]" placeholder="••••" required>
-            </div>
-            <button type="submit" id="verify-btn" class="w-full bg-emerald-600 text-white font-medium py-3.5 rounded-xl hover:bg-emerald-700 text-sm shadow-sm">تکمیل ثبت‌نام و ورود</button>
-            <button type="button" onclick="cancelOTP()" class="w-full text-center text-xs text-stone-400 hover:text-stone-600 pt-2">🔄 بازگشت و اصلاح شماره</button>
+            <p class="text-center text-xs text-stone-500">کد ۶ رقمی خود را از ربات دریافت کنید</p>
+            <a id="telegram-link-btn" href="#" target="_blank" class="block text-center w-full bg-sky-600 text-white text-xs py-3 rounded-xl">💬 دریافت کد ۶ رقمی از ربات</a>
+            <input type="text" id="otp-input" maxlength="6" class="w-full bg-stone-50 p-3 rounded-xl border border-stone-200 text-xl text-center font-mono tracking-[0.5em]" placeholder="••••••" required>
+            <button type="submit" class="w-full bg-emerald-600 text-white py-3 rounded-xl text-sm">ورود به گالری</button>
         </form>
-    </div>
-
-    <!-- پنل اصلی سایت -->
-    <div id="main-panel" class="w-full max-w-6xl mx-auto hidden transition-all duration-300">
-        <header class="text-center mb-8 border-b pb-6 border-gray-200 relative">
-            <button onclick="handleLogout()" class="absolute left-0 top-0 text-xs bg-stone-100 text-stone-600 px-3 py-2 rounded-xl">خروج</button>
-            <h1 class="text-3xl font-light text-stone-800 uppercase">SAMA ZARRIN</h1>
-            <p id="user-welcome" class="text-xs text-stone-500 mt-1">خوش آمدید</p>
-        </header>
-
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-            <h2 class="text-lg font-medium mb-5 text-stone-800">✨ ویترین طلا و جواهرات سما زرین</h2>
-            <div id="products-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                <p class="text-sm text-stone-400 text-center col-span-full py-4">در حال حاضر طلایی در ویترین موجود نیست.</p>
-            </div>
-        </div>
     </div>
 
     <script>
-        let isAdminLoggedIn = false;
-        const ADMIN_PHONE = "09111543422";
-        const ADMIN_PASS = "211820sks";
-
         let customersDatabase = JSON.parse(localStorage.getItem('sama_customers')) || {};
         let tempUserData = null;
-        
-        // کد تایید امن سایت
-        const SECURE_OTP = "2026"; 
-
-        function validateIranianPhoneNumber(phone) {
-            return /^09[0-9]{9}$/.test(phone);
-        }
+        let generatedOTP = ""; 
 
         function switchTab(type) {
-            if(type === 'login') {
-                document.getElementById('login-form').classList.remove('hidden');
-                document.getElementById('signup-form').classList.add('hidden');
-                document.getElementById('otp-form').classList.add('hidden');
-                document.getElementById('auth-tabs').classList.remove('hidden');
-            } else {
-                document.getElementById('login-form').classList.add('hidden');
-                document.getElementById('signup-form').classList.remove('hidden');
-                document.getElementById('otp-form').classList.add('hidden');
-                document.getElementById('auth-tabs').classList.remove('hidden');
-            }
+            document.getElementById('signup-form').classList.toggle('hidden', type === 'login');
+            document.getElementById('otp-form').classList.add('hidden');
         }
 
         function handleSignUpStep1(e) {
             e.preventDefault();
-            const phone = document.getElementById('new-phone').value.trim();
-            const pass = document.getElementById('new-password').value.trim();
-            const name = document.getElementById('new-name').value.trim();
+            // تولید کد ۶ رقمی تصادفی
+            generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+            tempUserData = { 
+                phone: document.getElementById('new-phone').value, 
+                pass: document.getElementById('new-password').value, 
+                name: document.getElementById('new-name').value 
+            };
 
-            if (!validateIranianPhoneNumber(phone)) {
-                alert("❌ شماره تلفن معتبر نیست!");
-                return;
-            }
-
-            tempUserData = { phone, pass, name };
+            const telegramBotLink = `https://t.me/samazarinn_bot?start=${generatedOTP}`;
+            document.getElementById('telegram-link-btn').href = telegramBotLink;
 
             document.getElementById('signup-form').classList.add('hidden');
-            document.getElementById('auth-tabs').classList.add('hidden');
             document.getElementById('otp-form').classList.remove('hidden');
         }
 
         function handleVerifyOTP(e) {
             e.preventDefault();
-            const userOTP = document.getElementById('otp-input').value.trim();
-
-            if (userOTP === SECURE_OTP) {
+            if (document.getElementById('otp-input').value.trim() === generatedOTP) {
                 customersDatabase[tempUserData.phone] = { password: tempUserData.pass, name: tempUserData.name };
                 localStorage.setItem('sama_customers', JSON.stringify(customersDatabase));
-                
-                alert(`🎉 حساب شما با موفقیت تایید و ساخته شد.`);
-                document.getElementById('user-welcome').innerText = `✨ مشتری گرامی، ${tempUserData.name} خوش آمدید`;
-                enterApp();
+                alert("ثبت‌نام با موفقیت انجام شد!");
+                location.reload();
             } else {
-                alert("❌ کد تایید اشتباه است! لطفاً مجدداً بررسی کنید.");
+                alert("❌ کد ۶ رقمی اشتباه است!");
             }
-        }
-
-        function cancelOTP() { switchTab('signup'); }
-
-        function handleLogin(e) {
-            e.preventDefault();
-            const phone = document.getElementById('user-phone').value.trim();
-            const pass = document.getElementById('user-password').value.trim();
-
-            if (phone === ADMIN_PHONE && pass === ADMIN_PASS) {
-                isAdminLoggedIn = true;
-                document.getElementById('user-welcome').innerText = "👑 پنل مدیریت اصلی گالری";
-                enterApp();
-                return;
-            }
-
-            if (customersDatabase[phone] && customersDatabase[phone].password === pass) {
-                isAdminLoggedIn = false;
-                document.getElementById('user-welcome').innerText = `✨ مشتری گرامی، ${customersDatabase[phone].name} خوش آمدید`;
-                enterApp();
-            } else {
-                alert("❌ شماره یا رمز عبور اشتباه است!");
-            }
-        }
-
-        function enterApp() {
-            document.getElementById('auth-section').style.display = 'none';
-            document.getElementById('main-panel').classList.remove('hidden');
-            document.body.className = "p-4 md:p-8 block bg-[#f4f4f6]";
-        }
-
-        function handleLogout() {
-            document.getElementById('main-panel').classList.add('hidden');
-            document.getElementById('auth-section').style.display = 'block';
-            document.body.className = "p-4 md:p-8 flex items-center justify-center min-h-screen bg-[#f4f4f6]";
         }
     </script>
 </body>
