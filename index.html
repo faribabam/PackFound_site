@@ -3,74 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>گالری طلا و جواهر سما زرین | SAMA ZARRIN</title>
+    <title>گالری سما زرین | ورود</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <style>
-        body { background-color: #f4f4f6; color: #212529; font-family: system-ui, sans-serif; }
-    </style>
 </head>
-<body class="p-4 md:p-8 flex items-center justify-center min-h-screen">
+<body class="bg-[#f4f4f6] flex items-center justify-center min-h-screen p-4">
 
-    <div id="auth-section" class="w-full max-w-md mx-auto bg-white p-8 rounded-3xl shadow-md border border-stone-100">
+    <div id="auth-box" class="w-full max-w-sm bg-white p-8 rounded-3xl shadow-sm border border-stone-100">
+        <h1 class="text-center text-xl font-light text-stone-800 mb-6">ورود به سما زرین</h1>
         
-        <div id="auth-tabs" class="flex justify-center gap-6 mb-8 border-b pb-3 border-stone-100">
-            <button onclick="switchTab('login')" id="tab-login" class="text-sm font-semibold text-stone-900 border-b-2 border-stone-900 pb-2 px-2 cursor-pointer">ورود</button>
-            <button onclick="switchTab('signup')" id="tab-signup" class="text-sm font-medium text-stone-400 pb-2 px-2 cursor-pointer">ثبت‌نام</button>
-        </div>
-
-        <form id="signup-form" class="space-y-5 hidden" onsubmit="handleSignUpStep1(event)">
-            <h1 class="text-center text-2xl font-light tracking-widest text-stone-800">SAMA ZARRIN</h1>
-            <input type="text" id="new-name" class="w-full bg-stone-50 p-3 rounded-xl border border-stone-200 text-sm" placeholder="نام و نام‌خانوادگی" required>
-            <input type="tel" id="new-phone" class="w-full bg-stone-50 p-3 rounded-xl border border-stone-200 text-sm text-center font-mono" placeholder="شماره موبایل: 09..." required>
-            <input type="password" id="new-password" class="w-full bg-stone-50 p-3 rounded-xl border border-stone-200 text-sm text-center font-mono" placeholder="رمز عبور" required>
-            <button type="submit" class="w-full bg-stone-900 text-white py-3 rounded-xl text-sm">تایید و ساخت کد</button>
-        </form>
-
-        <form id="otp-form" class="space-y-5 hidden" onsubmit="handleVerifyOTP(event)">
-            <p class="text-center text-xs text-stone-500">کد ۶ رقمی خود را از ربات دریافت کنید</p>
-            <a id="telegram-link-btn" href="#" target="_blank" class="block text-center w-full bg-sky-600 text-white text-xs py-3 rounded-xl">💬 دریافت کد ۶ رقمی از ربات</a>
-            <input type="text" id="otp-input" maxlength="6" class="w-full bg-stone-50 p-3 rounded-xl border border-stone-200 text-xl text-center font-mono tracking-[0.5em]" placeholder="••••••" required>
-            <button type="submit" class="w-full bg-emerald-600 text-white py-3 rounded-xl text-sm">ورود به گالری</button>
+        <form onsubmit="saveUser(event)" class="space-y-4">
+            <div>
+                <label class="text-xs text-stone-500 mr-1">نام و نام‌خانوادگی</label>
+                <input type="text" id="name" required class="w-full p-3 mt-1 rounded-xl bg-stone-50 border border-stone-200 text-sm">
+            </div>
+            <div>
+                <label class="text-xs text-stone-500 mr-1">شماره همراه</label>
+                <input type="tel" id="phone" required class="w-full p-3 mt-1 rounded-xl bg-stone-50 border border-stone-200 text-sm text-center font-mono">
+            </div>
+            <button type="submit" class="w-full bg-stone-900 text-white py-3 rounded-xl text-sm mt-2 hover:bg-stone-800">ورود به ویترین</button>
         </form>
     </div>
 
     <script>
-        let customersDatabase = JSON.parse(localStorage.getItem('sama_customers')) || {};
-        let tempUserData = null;
-        let generatedOTP = ""; 
-
-        function switchTab(type) {
-            document.getElementById('signup-form').classList.toggle('hidden', type === 'login');
-            document.getElementById('otp-form').classList.add('hidden');
-        }
-
-        function handleSignUpStep1(e) {
+        function saveUser(e) {
             e.preventDefault();
-            // تولید کد ۶ رقمی تصادفی
-            generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
-            tempUserData = { 
-                phone: document.getElementById('new-phone').value, 
-                pass: document.getElementById('new-password').value, 
-                name: document.getElementById('new-name').value 
+            const userData = {
+                name: document.getElementById('name').value,
+                phone: document.getElementById('phone').value
             };
-
-            const telegramBotLink = `https://t.me/samazarinn_bot?start=${generatedOTP}`;
-            document.getElementById('telegram-link-btn').href = telegramBotLink;
-
-            document.getElementById('signup-form').classList.add('hidden');
-            document.getElementById('otp-form').classList.remove('hidden');
+            
+            // ذخیره نام و شماره در حافظه
+            localStorage.setItem('sama_user', JSON.stringify(userData));
+            
+            alert("خوش آمدید " + userData.name + " عزیز!");
+            window.location.reload();
         }
 
-        function handleVerifyOTP(e) {
-            e.preventDefault();
-            if (document.getElementById('otp-input').value.trim() === generatedOTP) {
-                customersDatabase[tempUserData.phone] = { password: tempUserData.pass, name: tempUserData.name };
-                localStorage.setItem('sama_customers', JSON.stringify(customersDatabase));
-                alert("ثبت‌نام با موفقیت انجام شد!");
-                location.reload();
-            } else {
-                alert("❌ کد ۶ رقمی اشتباه است!");
-            }
+        // بررسی اینکه آیا کاربر قبلاً وارد شده یا نه
+        if (localStorage.getItem('sama_user')) {
+            const user = JSON.parse(localStorage.getItem('sama_user'));
+            document.body.innerHTML = `
+                <div class="text-center p-8">
+                    <h2 class="text-2xl font-bold">سلام ${user.name} عزیز!</h2>
+                    <p class="text-stone-600 mt-2">به ویترین طلا و جواهرات سما زرین خوش آمدید.</p>
+                    <button onclick="localStorage.removeItem('sama_user'); location.reload();" class="mt-6 text-xs text-red-500 underline">خروج از حساب</button>
+                </div>
+            `;
         }
     </script>
 </body>
