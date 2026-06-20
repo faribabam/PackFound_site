@@ -98,7 +98,7 @@
         const ADMIN_PHONE = "09111543422";
         const ADMIN_PASS = "211820sks";
 
-        // ✅ وب‌هوک شما با موفقیت متصل شد
+        // آدرس وب‌هوک میک شما
         const MAKE_WEBHOOK_URL = "https://hook.eu1.make.com/0s7mdac96m6fokxrkfrjm5chkkb6cqtb";
 
         let customersDatabase = JSON.parse(localStorage.getItem('sama_customers')) || {};
@@ -142,18 +142,20 @@
             tempUserData = { phone, pass, name };
 
             try {
+                // استفاده از متد ساده‌تر بدون هدرهای پیچیده برای دور زدن محدودیت مرورگر
                 await fetch(MAKE_WEBHOOK_URL, {
                     method: "POST",
+                    mode: "no-cors", // 👈 اضافه شد برای حل مشکل عدم ارسال دیتا در مرورگر
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ phone: phone, name: name, code: generatedOTP })
                 });
 
+                // رفتن به مرحله بعد
                 document.getElementById('signup-form').classList.add('hidden');
                 document.getElementById('auth-tabs').classList.add('hidden');
                 document.getElementById('otp-form').classList.remove('hidden');
             } catch (err) {
-                alert("❌ خطا در اتصال به سرور ابری تلگرام. دوباره تلاش کنید.");
-                console.error(err);
+                alert("❌ ارور سیستم: " + err.message);
             } finally {
                 btn.innerText = "دریافت کد تایید از تلگرام";
                 btn.disabled = false;
