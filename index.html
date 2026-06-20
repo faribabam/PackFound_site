@@ -15,6 +15,7 @@
 </head>
 <body class="p-4 md:p-8 flex items-center justify-center min-h-screen" id="body-layout">
 
+    <!-- 🔐 بخش فرم‌های ورود و ثبت‌نام -->
     <div id="auth-section" class="w-full max-w-md mx-auto bg-white p-8 rounded-3xl shadow-md border border-stone-100">
         
         <div id="auth-tabs" class="flex justify-center gap-6 mb-8 border-b pb-3 border-stone-100">
@@ -22,6 +23,7 @@
             <button onclick="switchTab('signup')" id="tab-signup" class="text-sm font-medium text-stone-400 pb-2 px-2 cursor-pointer">ثبت‌نام مشتری جدید</button>
         </div>
 
+        <!-- فرم ورود -->
         <form id="login-form" class="space-y-5" onsubmit="handleLogin(event)">
             <div class="text-center mb-4">
                 <h1 class="text-2xl font-light tracking-widest text-stone-800 uppercase">SAMA ZARRIN</h1>
@@ -38,6 +40,7 @@
             <button type="submit" class="w-full bg-stone-900 text-white font-medium py-3.5 rounded-xl hover:bg-stone-800 text-sm shadow-sm">ورود به گالری</button>
         </form>
 
+        <!-- فرم ثبت‌نام -->
         <form id="signup-form" class="space-y-5 hidden" onsubmit="handleSignUpStep1(event)">
             <div class="text-center mb-4">
                 <h1 class="text-2xl font-light tracking-widest text-stone-800 uppercase">SAMA ZARRIN</h1>
@@ -58,21 +61,23 @@
             <button type="submit" id="signup-btn" class="w-full bg-stone-900 text-white font-medium py-3.5 rounded-xl hover:bg-stone-800 text-sm shadow-sm">دریافت کد تایید از تلگرام</button>
         </form>
 
+        <!-- فرم بررسی کد تایید -->
         <form id="otp-form" class="space-y-5 hidden" onsubmit="handleVerifyOTP(event)">
             <div class="text-center mb-4">
                 <h1 class="text-2xl font-light tracking-widest text-stone-800 uppercase">SAMA ZARRIN</h1>
                 <p class="text-xs text-stone-400 mt-1">تایید شماره تلفن همراه</p>
-                <p class="text-[11px] text-amber-600 mt-2 bg-amber-50 py-2 rounded-lg px-2">🤖 لطفاً وارد ربات تلگرام ما شوید و دکمه اشتراک‌گذاری شماره را بزنید تا کد تایید برای شما ارسال شود.</p>
+                <p class="text-[11px] text-amber-600 mt-2 bg-amber-50 py-2 rounded-lg px-2">🤖 لطفاً وارد ربات تلگرام ما شوید؛ کد تایید برای شما ارسال شده است.</p>
             </div>
             <div>
                 <label class="block text-xs font-medium text-stone-500 mb-1.5 mr-1 text-center">کد ۴ رقمی دریافتی از تلگرام</label>
                 <input type="text" id="otp-input" maxlength="4" class="w-full bg-stone-50 p-3.5 rounded-xl text-stone-800 border border-stone-200 text-lg text-center font-mono tracking-[0.5em]" placeholder="••••" required>
             </div>
-            <button type="submit" class="w-full bg-emerald-600 text-white font-medium py-3.5 rounded-xl hover:bg-emerald-700 text-sm shadow-sm">تکمیل ثبت‌نام و ورود</button>
+            <button type="submit" id="verify-btn" class="w-full bg-emerald-600 text-white font-medium py-3.5 rounded-xl hover:bg-emerald-700 text-sm shadow-sm">تکمیل ثبت‌نام و ورود</button>
             <button type="button" onclick="cancelOTP()" class="w-full text-center text-xs text-stone-400 hover:text-stone-600 pt-2">🔄 بازگشت و اصلاح شماره</button>
         </form>
     </div>
 
+    <!-- پنل اصلی سایت -->
     <div id="main-panel" class="w-full max-w-6xl mx-auto hidden transition-all duration-300">
         <header class="text-center mb-8 border-b pb-6 border-gray-200 relative">
             <button onclick="handleLogout()" class="absolute left-0 top-0 text-xs bg-stone-100 text-stone-600 px-3 py-2 rounded-xl">خروج</button>
@@ -91,9 +96,9 @@
     <script>
         let isAdminLoggedIn = false;
         const ADMIN_PHONE = "09111543422";
-        const ADMIN_PASS = "211820sk";
+        const ADMIN_PASS = "211820sks";
 
-        // 🛑 آدرس وب‌هوک میک (Make) خودت را دقیقاً اینجا جایگزین کن:
+        // ✅ وب‌هوک شما با موفقیت متصل شد
         const MAKE_WEBHOOK_URL = "https://hook.eu1.make.com/0s7mdac96m6fokxrkfrjm5chkkb6cqtb";
 
         let customersDatabase = JSON.parse(localStorage.getItem('sama_customers')) || {};
@@ -118,7 +123,6 @@
             }
         }
 
-        // مرحله اول: ارسال اطلاعات به سرور ابری Make
         async function handleSignUpStep1(e) {
             e.preventDefault();
             const phone = document.getElementById('new-phone').value.trim();
@@ -134,16 +138,14 @@
             btn.innerText = "⏳ در حال ارتباط با تلگرام...";
             btn.disabled = true;
 
-            // تولید کد موقت
             generatedOTP = Math.floor(1000 + Math.random() * 9000).toString();
             tempUserData = { phone, pass, name };
 
-            // ارسال دیتا به Make برای پردازش در ربات تلگرام
             try {
                 await fetch(MAKE_WEBHOOK_URL, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ phone, name, code: generatedOTP })
+                    body: JSON.stringify({ phone: phone, name: name, code: generatedOTP })
                 });
 
                 document.getElementById('signup-form').classList.add('hidden');
@@ -151,18 +153,18 @@
                 document.getElementById('otp-form').classList.remove('hidden');
             } catch (err) {
                 alert("❌ خطا در اتصال به سرور ابری تلگرام. دوباره تلاش کنید.");
+                console.error(err);
             } finally {
                 btn.innerText = "دریافت کد تایید از تلگرام";
                 btn.disabled = false;
             }
         }
 
-        // مرحله دوم: تایید نهایی کد
         function handleVerifyOTP(e) {
             e.preventDefault();
             const userOTP = document.getElementById('otp-input').value.trim();
 
-            if (userOTP === generatedOTP) {
+            if (userOTP === generatedOTP.toString()) {
                 customersDatabase[tempUserData.phone] = { password: tempUserData.pass, name: tempUserData.name };
                 localStorage.setItem('sama_customers', JSON.stringify(customersDatabase));
                 
@@ -170,7 +172,7 @@
                 document.getElementById('user-welcome').innerText = `✨ مشتری گرامی، ${tempUserData.name} خوش آمدید`;
                 enterApp();
             } else {
-                alert("❌ کد تایید اشتباه است!");
+                alert("❌ کد تایید اشتباه است! لطفاً مجدداً بررسی کنید.");
             }
         }
 
