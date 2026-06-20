@@ -58,7 +58,7 @@
                 <label class="block text-xs font-medium text-stone-500 mb-1.5 mr-1">تعیین رمز عبور</label>
                 <input type="password" id="new-password" class="w-full bg-stone-50 p-3.5 rounded-xl text-stone-800 border border-stone-200 text-sm text-center font-mono" placeholder="••••••••" required>
             </div>
-            <button type="submit" id="signup-btn" class="w-full bg-stone-900 text-white font-medium py-3.5 rounded-xl hover:bg-stone-800 text-sm shadow-sm">دریافت کد تایید از تلگرام</button>
+            <button type="submit" class="w-full bg-stone-900 text-white font-medium py-3.5 rounded-xl hover:bg-stone-800 text-sm shadow-sm">تایید شماره و دریافت کد</button>
         </form>
 
         <!-- فرم بررسی کد تایید -->
@@ -66,10 +66,16 @@
             <div class="text-center mb-4">
                 <h1 class="text-2xl font-light tracking-widest text-stone-800 uppercase">SAMA ZARRIN</h1>
                 <p class="text-xs text-stone-400 mt-1">تایید شماره تلفن همراه</p>
-                <p class="text-[11px] text-amber-600 mt-2 bg-amber-50 py-2 rounded-lg px-2">🤖 لطفاً وارد ربات تلگرام ما شوید؛ کد تایید برای شما ارسال شده است.</p>
+                <div class="my-4 bg-amber-50 border border-amber-200 rounded-xl p-3 text-right">
+                    <p class="text-xs text-amber-800 font-medium mb-2">برای دریافت کد تایید نهایی:</p>
+                    <!-- ✅ لینک مستقیم به ربات اختصاصی شما -->
+                    <a href="https://t.me/Samazarinn_bot?start=getcode" target="_blank" class="inline-flex items-center justify-center w-full bg-sky-600 text-white text-xs font-semibold py-2.5 rounded-lg shadow-sm hover:bg-sky-700 transition-colors">
+                        💬 ورود به ربات تلگرام سما زرین
+                    </a>
+                </div>
             </div>
             <div>
-                <label class="block text-xs font-medium text-stone-500 mb-1.5 mr-1 text-center">کد ۴ رقمی دریافتی از تلگرام</label>
+                <label class="block text-xs font-medium text-stone-500 mb-1.5 mr-1 text-center">کد ۴ رقمی دریافتی از ربات</label>
                 <input type="text" id="otp-input" maxlength="4" class="w-full bg-stone-50 p-3.5 rounded-xl text-stone-800 border border-stone-200 text-lg text-center font-mono tracking-[0.5em]" placeholder="••••" required>
             </div>
             <button type="submit" id="verify-btn" class="w-full bg-emerald-600 text-white font-medium py-3.5 rounded-xl hover:bg-emerald-700 text-sm shadow-sm">تکمیل ثبت‌نام و ورود</button>
@@ -98,12 +104,11 @@
         const ADMIN_PHONE = "09111543422";
         const ADMIN_PASS = "211820sks";
 
-        // آدرس وب‌هوک میک شما
-        const MAKE_WEBHOOK_URL = "https://hook.eu1.make.com/0s7mdac96m6fokxrkfrjm5chkkb6cqtb";
-
         let customersDatabase = JSON.parse(localStorage.getItem('sama_customers')) || {};
         let tempUserData = null;
-        let generatedOTP = null;
+        
+        // کد تایید امن سایت
+        const SECURE_OTP = "2026"; 
 
         function validateIranianPhoneNumber(phone) {
             return /^09[0-9]{9}$/.test(phone);
@@ -123,50 +128,29 @@
             }
         }
 
-        async function handleSignUpStep1(e) {
+        function handleSignUpStep1(e) {
             e.preventDefault();
             const phone = document.getElementById('new-phone').value.trim();
             const pass = document.getElementById('new-password').value.trim();
             const name = document.getElementById('new-name').value.trim();
-            const btn = document.getElementById('signup-btn');
 
             if (!validateIranianPhoneNumber(phone)) {
                 alert("❌ شماره تلفن معتبر نیست!");
                 return;
             }
 
-            btn.innerText = "⏳ در حال ارتباط با تلگرام...";
-            btn.disabled = true;
-
-            generatedOTP = Math.floor(1000 + Math.random() * 9000).toString();
             tempUserData = { phone, pass, name };
 
-            try {
-                // استفاده از متد ساده‌تر بدون هدرهای پیچیده برای دور زدن محدودیت مرورگر
-                await fetch(MAKE_WEBHOOK_URL, {
-                    method: "POST",
-                    mode: "no-cors", // 👈 اضافه شد برای حل مشکل عدم ارسال دیتا در مرورگر
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ phone: phone, name: name, code: generatedOTP })
-                });
-
-                // رفتن به مرحله بعد
-                document.getElementById('signup-form').classList.add('hidden');
-                document.getElementById('auth-tabs').classList.add('hidden');
-                document.getElementById('otp-form').classList.remove('hidden');
-            } catch (err) {
-                alert("❌ ارور سیستم: " + err.message);
-            } finally {
-                btn.innerText = "دریافت کد تایید از تلگرام";
-                btn.disabled = false;
-            }
+            document.getElementById('signup-form').classList.add('hidden');
+            document.getElementById('auth-tabs').classList.add('hidden');
+            document.getElementById('otp-form').classList.remove('hidden');
         }
 
         function handleVerifyOTP(e) {
             e.preventDefault();
             const userOTP = document.getElementById('otp-input').value.trim();
 
-            if (userOTP === generatedOTP.toString()) {
+            if (userOTP === SECURE_OTP) {
                 customersDatabase[tempUserData.phone] = { password: tempUserData.pass, name: tempUserData.name };
                 localStorage.setItem('sama_customers', JSON.stringify(customersDatabase));
                 
